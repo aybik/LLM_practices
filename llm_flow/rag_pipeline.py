@@ -48,4 +48,38 @@ def run_pipeline(pdf_files, query):
     retriever = vectorstore.as_retriever()
     qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever)
     response = qa_chain.run(query)
-    return response
+    clean_response = response.replace("<think>", "").replace("</think>", "").strip()
+    return "\n".join(clean_response.split(". "))
+
+
+## Set up conversational retrieval with memory
+
+def setup_conversational_chain(vectorstore, model_name="deepseek-r1:1.5b"):
+    """Creates a retrieval-based QA system with memory."""
+    llm = Ollama(model=model_name)  
+    memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+    qa_chain = ConversationalRetrievalChain.from_llm(llm, retriever=vectorstore.as_retriever(), memory=memory)
+    return qa_chain
+
+def ask_question(qa_chain, query):
+    """Asks a question and stores the conversation history."""
+    response = qa_chain.invoke({"question": query})
+    print("🔎 Answer:", response.get("answer", "No answer found."))
+    return response.get("answer", "No answer found.")
+
+def run_pipeline_with_memory(pdf_files, query):
+    documents = load_and_process_pdfs(pdf_files)  
+    texts = split_text_into_chunks(documents) 
+    
+    embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    documents = [Document(page_content=text) for text in texts]  
+    vectorstore = FAISS.from_documents(documents, embedding_model)
+    
+    qa_chain = setup_conversational_chain(vectorstore)
+    
+    answer = ask_question(qa_chain, query)
+    answer = answer.replace("<think>", "").replace("</think>", "").strip()
+
+    return answer, qa_chain
+
+    
