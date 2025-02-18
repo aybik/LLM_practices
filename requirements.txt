@@ -1,0 +1,24 @@
+# Core Libraries
+numpy
+pymupdf  # For PDF text extraction (PyMuPDF)
+
+# LangChain for RAG
+langchain
+langchain-community  # FAISS integration
+langchain-core
+
+# Vector Storage
+faiss-cpu  # FAISS for fast similarity search
+
+# Embeddings
+sentence-transformers  # Local embeddings (MiniLM)
+langchainhub  # Required for LangChain embeddings
+langchain-openai  # Required for HuggingFaceEmbeddings
+transformers  # Required if using DeepSeek embeddings
+torch  # Required for DeepSeek & Sentence-Transformers
+
+# Local LLM via Ollama
+ollama  # To run DeepSeek locally
+
+# Debugging & Performance Optimization (Optional)
+protobuf==3.20.3  # Fix
