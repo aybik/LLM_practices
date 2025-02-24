@@ -2,3 +2,5 @@
 .DS_Store
 *.docx
 data/
+docs/
+.env
