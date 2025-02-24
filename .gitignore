@@ -3,4 +3,5 @@
 *.docx
 data/
 docs/
+images/
 .env
