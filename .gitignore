@@ -5,3 +5,4 @@ data/
 docs/
 images/
 .env
+.python-version
