@@ -3,4 +3,6 @@
 *.docx
 data/
 docs/
+images/
 .env
+.python-version
